@@ -1,3 +1,5 @@
-# hola
-I guess GitHub is a thing or something. Yes? sure.
-This is an edit to the thing I guess.
+# What is this?
+This is Anvil. A flash game about escaping death.
+DUN DUN DUN!
+
+
