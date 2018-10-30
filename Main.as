@@ -34,7 +34,10 @@ package
 		var moveRight:Boolean=false;		
 		
 		var timer:Timer = new Timer(25);
-						
+				
+				
+				
+				
 		public function Main()
 		{
 			
@@ -47,19 +50,25 @@ package
 		
 		
 		public function frameControl(frame)
-		{
+		{				
+			
+			
 			gotoAndStop(frame);
+			
+			
 			if(this.currentFrame==1)
 			{
 				
 				// add event listeners
 				playButton.addEventListener(MouseEvent.CLICK, startGame);
+				timer.addEventListener("timer", playerMovement); //test...
 				
 			}
 			
 			if(this.currentFrame==2)
 			{
-			
+				health=1;
+				
 				addChild(HP1OFF);
 				addChild(HP2OFF);
 				addChild(HP3OFF);
@@ -97,7 +106,7 @@ package
 				
 				
 
-				timer.addEventListener("timer", playerMovement); //test...
+				
 				timer.start();
 				
 				stage.addEventListener ( KeyboardEvent.KEY_DOWN, reportKeyDown ); //let the player move.
@@ -108,7 +117,9 @@ package
 			{
 				
 				scoreOut.text="Your final score was: "+score.toString();
+				
 				highScoreOut.text="High Score: "+cookie.data.highScore;
+				
 				playButton.addEventListener(MouseEvent.CLICK, Replay);
 				
 				
@@ -253,7 +264,7 @@ package
 						removeChild(HP3ON);
 				}
 				
-				gotoAndStop(3);
+				frameControl(3);
 			}
 			
 			if(health==4)
@@ -383,6 +394,7 @@ package
 		}
 
 		
+
 		
 		function reportKeyUp( event:KeyboardEvent )
 		{
@@ -406,6 +418,7 @@ package
 		
 		function Replay(e:MouseEvent) 
 		{
+			trace ("mimimmimimi");
 			cookie.flush();
 			frameControl(2);
 			
