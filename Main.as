@@ -342,7 +342,7 @@ package
 			if(moveLeft)
 			{
 				PlayerHead.x=PlayerHead.x-6;
-				Player.Playergoto(4);
+				Player.gotoAndStop(4);
 			}
 			if(moveRight)
 			{
