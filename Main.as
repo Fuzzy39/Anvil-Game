@@ -341,26 +341,31 @@ package
 			// Move the player each tick.
 			if(moveLeft)
 			{
-				Player.x=Player.x-6;
+				PlayerHead.x=PlayerHead.x-6;
+				Player.Playergoto(4);
 			}
 			if(moveRight)
 			{
-				Player.x=Player.x+6;
+				PlayerHead.x=PlayerHead.x+6;
+				Player.gotoAndStop(3);
 			}
-			
+			if(!moveLeft && !moveRight)
+			{
+				Player.gotoAndStop(1);
+			}
 			// manage boundries (kinda crude, but whatever.)
-			if(Player.x<150)
+			if(PlayerHead.x<150)
 			{
-				Player.x=150;
+				PlayerHead.x=150;
 			}
-			if(Player.x>400)
+			if(PlayerHead.x>400)
 			{
-				Player.x=400;
+				PlayerHead.x=400;
 			}
 			
-			//Move the player's head with the body.
-			PlayerHead.x=Player.x+5;
-			PlayerHead.y=Player.y-40;
+			//Move the the body with player's head.
+			Player.x=PlayerHead.x-4;
+			Player.y=PlayerHead.y+40;
 			
 			// find various objects that hit the players head.
 			detectCollision();
