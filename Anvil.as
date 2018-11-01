@@ -1,11 +1,13 @@
-﻿
 package 
 {
+	
 	import flash.display.SimpleButton;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.display.MovieClip;
 	import flash.display.DisplayObjectContainer;
+	import flash.events.KeyboardEvent;
+	
 	
 	public class Anvil extends flash.display.MovieClip
 	{
@@ -13,6 +15,7 @@ package
 		
 		public var timer:Timer = new Timer(25);
 		var speedmult:int=0;
+		var scoring:Boolean=false;
 		
 		public function Anvil()
 		{
@@ -20,8 +23,8 @@ package
 
 			timer.addEventListener("timer", controlFall); //controls the falling.
 			timer.start();
-			
 		}
+		
 		
 		
 		function controlFall(event:TimerEvent)
@@ -31,12 +34,23 @@ package
 
 			if(this.y>275)
 			{
+				if(scoring)
+				{
+					Main.score++;
+				}
 				speedmult++;
-				this.y=-50
-				this.x= ((Math.floor(Math.random() * 6))*50)+150;
+				reroll();
 				
 			}
 			
+		}
+		
+		
+		function reroll()
+		{
+			this.y=-50;
+			this.x= ((Math.floor(Math.random() * 6))*50)+150;
+		
 		}
 	}
 }
