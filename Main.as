@@ -342,12 +342,19 @@ package
 			if(moveLeft)
 			{
 				PlayerHead.x=PlayerHead.x-6;
-				Player.gotoAndStop(4);
+				if(Player.currentFrame<10)
+				{
+					Player.gotoAndPlay(10);
+				}
 			}
 			if(moveRight)
 			{
 				PlayerHead.x=PlayerHead.x+6;
-				Player.gotoAndStop(3);
+				
+				if(Player.currentFrame==1||Player.currentFrame>=10)
+				{
+					Player.gotoAndPlay(3);
+				}
 			}
 			if(!moveLeft && !moveRight)
 			{
