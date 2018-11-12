@@ -1,4 +1,4 @@
-package 
+﻿package 
 {
 	import flash.events.MouseEvent;
 	import flash.display.MovieClip;
@@ -342,24 +342,30 @@ package
 			if(moveLeft)
 			{
 				PlayerHead.x=PlayerHead.x-6;
-				if(Player.currentFrame<10)
+				
+				if(Player.currentFrame<17)
 				{
-					Player.gotoAndPlay(10);
+					Player.gotoAndPlay(18);
 				}
+				
 			}
+			
 			if(moveRight)
 			{
 				PlayerHead.x=PlayerHead.x+6;
 				
-				if(Player.currentFrame==1||Player.currentFrame>=10)
+				if(Player.currentFrame==1||Player.currentFrame>=17)
 				{
 					Player.gotoAndPlay(3);
 				}
+				
 			}
+			
 			if(!moveLeft && !moveRight)
 			{
 				Player.gotoAndStop(1);
 			}
+			
 			// manage boundries (kinda crude, but whatever.)
 			if(PlayerHead.x<150)
 			{
@@ -371,8 +377,10 @@ package
 			}
 			
 			//Move the the body with player's head.
-			Player.x=PlayerHead.x-4;
-			Player.y=PlayerHead.y+40;
+			Player.x=PlayerHead.x;
+			PlayerHead.y=300-(PlayerHead.height+Player.height)
+			Player.y=PlayerHead.y+PlayerHead.height-2.5;
+			
 			
 			// find various objects that hit the players head.
 			detectCollision();
@@ -393,6 +401,13 @@ package
 				
 				moveRight=true;
 				
+			}
+			if ( event.keyCode == Keyboard.C ) // Move the player right
+			{
+				
+				anvilone.gotoAndStop(2);
+				anviltwo.gotoAndStop(2);
+				anvilthree.gotoAndStop(2);
 			}
 			
 			
