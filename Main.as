@@ -34,10 +34,11 @@
 		//init player
 		var Player=new playerBody();
 		
-		// init timer
+		// init timers
 		var timer:Timer = new Timer(25);
+		var winTimer:Timer = new Timer(5000);
 				
-				
+		private var _keysPressed:Object = { };
 				
 				
 		public function Main()
@@ -80,7 +81,11 @@
 				this.HP3ON.y=50;
 				
 				anvilone.scoring=true;
-				
+				anvilGold2.Active=false;
+				anvilGold3.Active=false;
+				anvilGold4.Active=false;
+				anvilGold5.Active=false;
+				anvilGold6.Active=false;
 				
 				// Setup health
 				health=1;
@@ -114,6 +119,7 @@
 				
 				//Event listeners:
 				timer.addEventListener("timer", playerMovement); //get the player moving.
+				winTimer.addEventListener("timer", winEnd);
 				stage.addEventListener ( KeyboardEvent.KEY_DOWN, reportKeyDown ); 
 				stage.addEventListener ( KeyboardEvent.KEY_UP, reportKeyUp ); 
 				
@@ -134,6 +140,10 @@
 				playButton.addEventListener(MouseEvent.CLICK, Replay);
 				
 				
+			}
+			if(this.currentFrame==4)
+			{
+				playButton.addEventListener(MouseEvent.CLICK, Replay);
 			}
 		}
 		
@@ -160,8 +170,8 @@
 			HB2.y=anviltwo.y;	
 			HB3.x=anvilthree.x+11;
 			HB3.y=anvilthree.y;
-			HB4.x=anvilGold.x+11;
-			HB4.y=anvilGold.y;
+			HB4.x=anvilGold1.x+11;
+			HB4.y=anvilGold1.y;
 	
 			// This is what happens when you hit an anvil.
 			if(PlayerHead.hitTestObject(HB1)||PlayerHead.hitTestObject(HB2)||PlayerHead.hitTestObject(HB3)) 
@@ -178,13 +188,71 @@
 			if(PlayerHead.hitTestObject(HB4))
 			{
 				health++;
-				anvilGold.reroll(); // reset the anvil.
+				anvilGold1.reroll(); // reset the anvil.
 			}
 			
 			
 			scoreManager();			
 			healthManager(); //deal with the health system now
+			projectileManager(); // Make sure everything is okay with the anvils.
 			
+		}
+		
+		
+		function winEnd(event:TimerEvent)
+		{
+			
+			timer.stop();
+			winTimer.stop();
+			anvilone.timer.stop();
+			anviltwo.timer.stop();
+			anvilthree.timer.stop();
+			
+			// Get rid of everything else.
+			removeChild(Player);
+			cookie.flush();
+			
+			//Systematicly remove health icons from the stage.
+			if(stage.contains(HP1OFF))
+			{
+				removeChild(HP1OFF);
+			}
+			if(stage.contains(HP2OFF))
+			{
+					removeChild(HP2OFF);
+			}
+			if(stage.contains(HP3OFF))
+			{
+					removeChild(HP3OFF);
+			}
+			
+			if(stage.contains(HP1ON))
+			{
+				removeChild(HP1ON);
+			}
+			if(stage.contains(HP2ON))
+			{
+					removeChild(HP2ON);
+			}
+			if(stage.contains(HP3ON))
+			{
+					removeChild(HP3ON);
+			}
+			
+			//goto 'win' screen:
+			frameControl(4);
+		}
+		
+		
+		function projectileManager() // Deals with projectiles in spicific edge cases
+		{
+			anvilone.y=anviltwo.y; //make sure anvils don't "shift"
+			anvilone.y=anvilthree.y;
+			
+			//while(true) // make sure anvils are never lined up three in a row.
+			//{
+			//	if()
+			//}
 		}
 		
 		
@@ -198,6 +266,31 @@
 				cookie.data.highScore=score;
 				cookie.flush();
 				highScoreText.text="High Score: "+cookie.data.highScore;
+			}
+			
+			if(score>=50)
+			{
+			
+				anvilone.Active=false;
+				anviltwo.Active=false;
+				anvilthree.Active=false;
+				
+				anvilone.reroll();
+				anviltwo.reroll();
+				anvilthree.reroll();
+				
+				anvilGold2.Active=true;
+				anvilGold3.Active=true;
+				anvilGold4.Active=true;
+				anvilGold5.Active=true;
+				anvilGold6.Active=true;
+
+				if(!winTimer.running)
+				{
+					
+					winTimer.start();
+					
+				}
 			}
 			
 		}
@@ -389,7 +482,7 @@
 
 		function reportKeyDown( event:KeyboardEvent )
 		{
-
+			 _keysPressed[event.keyCode] = true;
 			if ( event.keyCode == Keyboard.LEFT ) // 
 			{
 			
@@ -402,12 +495,19 @@
 				moveRight=true;
 				
 			}
-			if ( event.keyCode == Keyboard.C ) // Move the player right
+			if ( _keysPressed[Keyboard.C]&&_keysPressed[Keyboard.R]&&_keysPressed[Keyboard.A]&&_keysPressed[Keyboard.B]) // SUPER SECRET CRAB MODE!!!!
 			{
 				
 				anvilone.gotoAndStop(2);
 				anviltwo.gotoAndStop(2);
 				anvilthree.gotoAndStop(2);
+			}
+			
+			if ( event.keyCode == Keyboard.P ) // Debug some more score.
+			{
+				
+				score=50;
+				
 			}
 			
 			
