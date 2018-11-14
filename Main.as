@@ -63,7 +63,7 @@
 			{
 				
 				// add event listeners
-				playButton.addEventListener(MouseEvent.CLICK, startGame);
+				playButton.addEventListener(MouseEvent.CLICK, gameMenu);
 				
 				
 			}
@@ -86,6 +86,7 @@
 				anvilGold4.Active=false;
 				anvilGold5.Active=false;
 				anvilGold6.Active=false;
+				anvilGold7.Active=false;
 				
 				// Setup health
 				health=1;
@@ -129,6 +130,8 @@
 			
 			if(this.currentFrame==3)
 			{
+				//graphic the back button
+				backButton.gotoAndStop(2);
 				// Write the scores:
 				scoreOut.text="Your final score was: "+score.toString();
 				highScoreOut.text="High Score: "+cookie.data.highScore;
@@ -136,30 +139,42 @@
 				//reset the score
 				score=0;
 				
+				
 				//Event listeners:
 				playButton.addEventListener(MouseEvent.CLICK, Replay);
-				
+				backButton.addEventListener(MouseEvent.CLICK, returnToMain);
 				
 			}
 			if(this.currentFrame==4)
 			{
-				playButton.addEventListener(MouseEvent.CLICK, Replay);
+				//reset the score
+				score=0;
+				
+				playButton.addEventListener(MouseEvent.CLICK, returnToMain);
 			}
 		}
 		
 		
-		function startGame(e:MouseEvent) // this brings you to the actual game.
+		function gameMenu(e:MouseEvent) // this brings you to the actual game.
 		{
 			//goto game
 			frameControl(2);
 		
 		}
 		
+		function returnToMain(e:MouseEvent)
+		{
+			cookie.flush();
+			frameControl(1);
+		}
 		
-		
-		
-		
-		
+		function Replay(e:MouseEvent) 
+		{
+			
+			cookie.flush();
+			frameControl(2);
+			
+		}
 		
 		function detectCollision() // find anything that hits the players head
 		{
@@ -274,17 +289,20 @@
 				anvilone.Active=false;
 				anviltwo.Active=false;
 				anvilthree.Active=false;
+				anvilGold1.Active=false;
 				
 				anvilone.reroll();
 				anviltwo.reroll();
 				anvilthree.reroll();
+				anvilGold1.reroll();
 				
 				anvilGold2.Active=true;
 				anvilGold3.Active=true;
 				anvilGold4.Active=true;
 				anvilGold5.Active=true;
 				anvilGold6.Active=true;
-
+				anvilGold7.Active=true;
+				
 				if(!winTimer.running)
 				{
 					
@@ -406,7 +424,7 @@
 			
 			if(health<3)
 			{
-			if(stage.contains(HP2ON))
+				if(stage.contains(HP2ON))
 				{
 					addChild(HP2OFF);
 					removeChild(HP2ON);
@@ -464,9 +482,9 @@
 			{
 				PlayerHead.x=150;
 			}
-			if(PlayerHead.x>400)
+			if(PlayerHead.x>450-PlayerHead.width)
 			{
-				PlayerHead.x=400;
+				PlayerHead.x=450-PlayerHead.width;
 			}
 			
 			//Move the the body with player's head.
@@ -536,13 +554,7 @@
 		
 		
 		
-		function Replay(e:MouseEvent) 
-		{
-			
-			cookie.flush();
-			frameControl(2);
-			
-		}
+		
 
 	}
 }

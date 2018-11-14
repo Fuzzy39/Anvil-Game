@@ -1,4 +1,4 @@
-package 
+﻿package 
 {
 	
 	import flash.display.SimpleButton;
@@ -15,7 +15,8 @@ package
 		
 		public var timer:Timer = new Timer(25);
 		var speedmult:int=0;
-		var scoring:Boolean=false;
+		var scoring:Boolean = false;
+		public var Active:Boolean = true;
 		
 		public function Anvil()
 		{
@@ -29,9 +30,11 @@ package
 		
 		function controlFall(event:TimerEvent)
 		{
+			if(Active)
+			{
+				this.y=this.y+(2+(speedmult*0.18));
+			}
 			
-			this.y=this.y+(2+(speedmult*0.18));
-
 			if(this.y>275)
 			{
 				if(scoring)

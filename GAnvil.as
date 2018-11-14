@@ -9,7 +9,7 @@
 	public class GAnvil extends flash.display.MovieClip 
 	{
 		public var timer:Timer = new Timer(25);
-		
+		public var Active:Boolean =true;
 		
 		public function GAnvil() 
 		{
@@ -20,16 +20,23 @@
 		
 		function controlFall(event:TimerEvent)
 		{
+			if(Active)
+			{
+				this.y=this.y+1;
+			}
 			
-			this.y=this.y+1;
-
 			if(this.y>275)
 			{
-				this.y=(Math.floor(Math.random()*-100))-350;
-				this.x= ((Math.floor(Math.random() * 6))*50)+150;
 				
+				reroll();
 			}
 
+		}
+		
+		public function reroll()
+		{
+			this.y=(Math.floor(Math.random()*-100))-350;
+			this.x= ((Math.floor(Math.random() * 6))*50)+150;
 		}
 	}
 }
