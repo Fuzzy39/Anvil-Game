@@ -13,9 +13,11 @@
 		
 		//COOKIES!! (naturaly, for the cookie monster.)
 		var cookie:SharedObject = SharedObject.getLocal("masonGameCookie2");
-
+		
+		public static var mode:int = 0; // game difficulty, slightly affects game rules. 0=normal, 1=hard, 2=brutal.
 		public static var score:int = 0; //scoring is done by the anvil class.
 		var health:int = 1;//max 4, if it hits 0, you lose.
+		var debug:Boolean=false; //Cheats!
 		
 		var moveLeft:Boolean=false; // check if the player is trying to move left or right.
 		var moveRight:Boolean=false;	
@@ -110,12 +112,15 @@
 				
 				
 				//Setup Highscore:
-				if(cookie.data.highScore==undefined)
-				{
-					cookie.data.highScore=0;
-				}
 				
-				highScoreText.text="High Score: "+cookie.data.highScore;
+				if(mode==0)
+				{
+					highScoreText.text="High Score: "+cookie.data.highScore;
+				}
+				else
+				{
+						highScoreText.text="High Score: "+cookie.data.highScoreHard;
+				}
 				
 				
 				//Event listeners:
@@ -134,8 +139,14 @@
 				backButton.gotoAndStop(2);
 				// Write the scores:
 				scoreOut.text="Your final score was: "+score.toString();
-				highScoreOut.text="High Score: "+cookie.data.highScore;
-				
+				if(mode==0)
+				{
+					highScoreOut.text="High Score: "+cookie.data.highScore;
+				}
+				else
+				{
+					highScoreOut.text="High Score: "+cookie.data.highScoreHard;
+				}
 				//reset the score
 				score=0;
 				
@@ -152,12 +163,64 @@
 				
 				playButton.addEventListener(MouseEvent.CLICK, returnToMain);
 			}
+			if(this.currentFrame==5)
+			{
+				//setup Highscore.
+				if(cookie.data.highScore==undefined)
+				{
+					cookie.data.highScore=0;
+				}
+				
+				if(cookie.data.highScoreHard==undefined)
+				{
+					cookie.data.highScoreHard=0;
+				}
+				
+				HS1.text=cookie.data.highScore+"/50";
+				
+				if(cookie.data.highScore==50) // if hard mode is unlocked...
+				{
+					hardButton.gotoAndStop(2);
+					HS2.text=cookie.data.highScoreHard+"/50";
+				}
+				
+				
+				//graphic the back button
+				backButton.gotoAndStop(1);
+				
+				
+				
+				//action Listeners:
+				backButton.addEventListener(MouseEvent.CLICK, returnToMain);
+				playNormal.addEventListener(MouseEvent.CLICK, gameInit);
+				hardButton..addEventListener(MouseEvent.CLICK, gameInitHard);
+			}
 		}
 		
 		
-		function gameMenu(e:MouseEvent) // this brings you to the actual game.
+		
+		
+		
+		
+		function gameMenu(e:MouseEvent) // this brings you to the game select menu.
 		{
 			//goto game
+			frameControl(5);
+		
+		}
+		
+		function gameInit(e:MouseEvent) // this brings you to the actual game.
+		{
+			//goto game
+			mode=0;
+			frameControl(2);
+		
+		}
+		
+		function gameInitHard(e:MouseEvent) // this brings you to the actual game.
+		{
+			//goto game
+			mode=1;
 			frameControl(2);
 		
 		}
@@ -179,19 +242,22 @@
 		function detectCollision() // find anything that hits the players head
 		{
 			//move the hitboxes with the anvils
-			HB1.x=anvilone.x+11;
+			HB1.x=anvilone.x+13;
 			HB1.y=anvilone.y;
-			HB2.x=anviltwo.x+11;
-			HB2.y=anviltwo.y;	
-			HB3.x=anvilthree.x+11;
+			HB2.x=anviltwo.x+13;
+			HB2.y=anviltwo.y;
+			HB3.x=anvilthree.x+13;
 			HB3.y=anvilthree.y;
-			HB4.x=anvilGold1.x+11;
+			HB4.x=anvilGold1.x+13;
 			HB4.y=anvilGold1.y;
 	
 			// This is what happens when you hit an anvil.
 			if(PlayerHead.hitTestObject(HB1)||PlayerHead.hitTestObject(HB2)||PlayerHead.hitTestObject(HB3)) 
 			{
-				health--;
+				if(!debug)
+				{
+					health--;
+				}
 				
 				anvilone.reroll();
 				anviltwo.reroll();
@@ -254,7 +320,7 @@
 					removeChild(HP3ON);
 			}
 			
-			//goto 'win' screen:
+			//goto win screen:
 			frameControl(4);
 		}
 		
@@ -264,23 +330,110 @@
 			anvilone.y=anviltwo.y; //make sure anvils don't "shift"
 			anvilone.y=anvilthree.y;
 			
-			//while(true) // make sure anvils are never lined up three in a row.
-			//{
-			//	if()
-			//}
+			while(true) //rules restricting anvil generation.
+			{
+				if(mode==0)// rules for normal mode
+				{
+					while(true)//three anvils cannot line up on x axis.
+					{
+						if(anvilone.x==anviltwo.x+50 && anviltwo.x==anvilthree.x+50)
+						{
+							anvilone.reroll();
+							anviltwo.reroll();
+							anvilthree.reroll();
+						}
+						else
+						{
+							if(anvilone.x==anvilthree.x+50 && anvilthree.x==anviltwo.x+50)
+							{
+								anvilone.reroll();
+								anviltwo.reroll();
+								anvilthree.reroll();
+							}
+							else
+							{
+								if(anviltwo.x==anvilone.x+50 && anvilone.x==anvilthree.x+50)
+								{
+									anvilone.reroll();
+									anviltwo.reroll();
+									anvilthree.reroll();
+								}
+								else
+								{
+									if(anviltwo.x==anvilthree.x+50 && anvilthree.x==anvilone.x+50)
+									{
+										anvilone.reroll();
+										anviltwo.reroll();
+										anvilthree.reroll();
+									}
+									else
+									{
+										if(anvilthree.x==anvilone.x+50 && anvilone.x==anviltwo.x+50)
+										{
+											anvilone.reroll();
+											anviltwo.reroll();
+											anvilthree.reroll();
+										}
+										else
+										{
+											if(anvilthree.x==anviltwo.x+50 && anviltwo.x==anvilone.x+50)
+											{
+												anvilone.reroll();
+												anviltwo.reroll();
+												anvilthree.reroll();
+											}
+											else
+											{
+												break;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				if(mode==1)
+				{
+					if(Math.random() *4==1)
+					{
+						anvilone.x=anvilGold1.x;
+					}
+				}
+				break;
+			} 
 		}
 		
 		
 		function scoreManager() // deals with score*.
 		{
 		
-			scoreText.text="Score: "+score;
 			
-			if(cookie.data.highScore<score) // increases high score count. (this shouold only happen when you die)
+			if(!debug)
+			{	
+				scoreText.text="Score: "+score;
+				if(mode==0)
+				{
+					if(cookie.data.highScore<score) // increases high score count. (this shouold only happen when you die)
+					{
+						cookie.data.highScore=score;
+						cookie.flush();
+						highScoreText.text="High Score: "+cookie.data.highScore;
+					}
+				}
+				else
+				{
+					if(cookie.data.highScoreHard<score) // increases high score count. (this shouold only happen when you die)
+					{
+						cookie.data.highScoreHard=score;
+						cookie.flush();
+						highScoreText.text="High Score: "+cookie.data.highScoreHard;
+					}
+				}
+			}
+			else
 			{
-				cookie.data.highScore=score;
-				cookie.flush();
-				highScoreText.text="High Score: "+cookie.data.highScore;
+				scoreText.text="Debug Mode"
 			}
 			
 			if(score>=50)
@@ -501,13 +654,25 @@
 		function reportKeyDown( event:KeyboardEvent )
 		{
 			 _keysPressed[event.keyCode] = true;
-			if ( event.keyCode == Keyboard.LEFT ) // 
+			if ( event.keyCode == Keyboard.LEFT ) // Move the player Left.
 			{
 			
 				moveLeft=true;
 				
 			}
 			if ( event.keyCode == Keyboard.RIGHT ) // Move the player right
+			{
+				
+				moveRight=true;
+				
+			}
+			if ( event.keyCode == Keyboard.A ) // Move the player Left.
+			{
+			
+				moveLeft=true;
+				
+			}
+			if ( event.keyCode == Keyboard.D ) // Move the player right
 			{
 				
 				moveRight=true;
@@ -523,8 +688,32 @@
 			
 			if ( event.keyCode == Keyboard.P ) // Debug some more score.
 			{
+				if(score<25)
+				{
+						score=25;
+				}
+				else
+				{
+					if(score<50)
+					{
+						score=50;
+					}
+				}
+			}
+			
+			if ( event.keyCode == Keyboard.O ) // activate Debug mode!
+			{
 				
-				score=50;
+				if(!debug) //if debug mode is off, turn it on.
+				{
+					debug=true;
+					anvilone.scoring=false;
+				}
+				else
+				{
+					debug=false;
+					anvilone.scoring=true;
+				}
 				
 			}
 			
@@ -544,6 +733,19 @@
 				
 			}
 			if ( event.keyCode == Keyboard.RIGHT ) // Move the player right
+			{
+				
+				moveRight=false;
+				
+			}
+			
+			if ( event.keyCode == Keyboard.A ) // 
+			{
+			
+				moveLeft=false;
+				
+			}
+			if ( event.keyCode == Keyboard.D ) // Move the player right
 			{
 				
 				moveRight=false;

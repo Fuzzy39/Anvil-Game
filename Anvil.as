@@ -32,7 +32,14 @@
 		{
 			if(Active)
 			{
-				this.y=this.y+(2+(speedmult*0.18));
+				if(Main.mode==0)
+				{
+					this.y=this.y+(2+(speedmult*0.18));
+				}
+				else
+				{
+					this.y=this.y+(2+(speedmult*0.25));
+				}
 			}
 			
 			if(this.y>275)
