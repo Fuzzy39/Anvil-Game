@@ -10,7 +10,8 @@
 	
 	public class Main extends flash.display.MovieClip
 	{
-		
+		var crabMode:Boolean=false;
+		public static var goldx:int;
 		//COOKIES!! (naturaly, for the cookie monster.)
 		var cookie:SharedObject = SharedObject.getLocal("masonGameCookie2");
 		
@@ -115,11 +116,11 @@
 				
 				if(mode==0)
 				{
-					highScoreText.text="High Score: "+cookie.data.highScore;
+					highScoreText.text="Best: "+cookie.data.highScore+"/50";
 				}
 				else
 				{
-						highScoreText.text="High Score: "+cookie.data.highScoreHard;
+						highScoreText.text="Best: "+cookie.data.highScoreHard+"/50";
 				}
 				
 				
@@ -138,14 +139,15 @@
 				//graphic the back button
 				backButton.gotoAndStop(2);
 				// Write the scores:
-				scoreOut.text="Your final score was: "+score.toString();
+				var scoreS:String=score.toString();
+				scoreOut.text="Your final score was: "+scoreS+"/50";
 				if(mode==0)
 				{
-					highScoreOut.text="High Score: "+cookie.data.highScore;
+					highScoreOut.text="Best: "+cookie.data.highScore+"/50";
 				}
 				else
 				{
-					highScoreOut.text="High Score: "+cookie.data.highScoreHard;
+					highScoreOut.text="Best: "+cookie.data.highScoreHard+"/50";
 				}
 				//reset the score
 				score=0;
@@ -158,10 +160,18 @@
 			}
 			if(this.currentFrame==4)
 			{
+				backButton2.gotoAndStop(2);
 				//reset the score
 				score=0;
-				
-				playButton.addEventListener(MouseEvent.CLICK, returnToMain);
+				if(mode==0)
+				{
+					winUnlock.text="Hard Mode Unlocked!"
+				}
+				if(mode==1)
+				{
+					winUnlock.text="    You Won Beta 2!"
+				}
+				backButton2.addEventListener(MouseEvent.CLICK, returnToMain);
 			}
 			if(this.currentFrame==5)
 			{
@@ -220,8 +230,11 @@
 		function gameInitHard(e:MouseEvent) // this brings you to the actual game.
 		{
 			//goto game
-			mode=1;
-			frameControl(2);
+			if(cookie.data.highScore==50)
+			{
+				mode=1;
+				frameControl(2);
+			}
 		
 		}
 		
@@ -330,6 +343,8 @@
 			anvilone.y=anviltwo.y; //make sure anvils don't "shift"
 			anvilone.y=anvilthree.y;
 			
+			goldx= anvilGold1.x;
+			
 			while(true) //rules restricting anvil generation.
 			{
 				if(mode==0)// rules for normal mode
@@ -393,12 +408,11 @@
 						}
 					}
 				}
-				if(mode==1)
-				{
-					if(Math.random() *4==1)
-					{
-						anvilone.x=anvilGold1.x;
-					}
+				if(mode==1) // hard mode rules.
+				{	
+					
+					
+					
 				}
 				break;
 			} 
@@ -411,14 +425,14 @@
 			
 			if(!debug)
 			{	
-				scoreText.text="Score: "+score;
+				scoreText.text="Score: "+score+"/50";
 				if(mode==0)
 				{
 					if(cookie.data.highScore<score) // increases high score count. (this shouold only happen when you die)
 					{
 						cookie.data.highScore=score;
 						cookie.flush();
-						highScoreText.text="High Score: "+cookie.data.highScore;
+						highScoreText.text="Best: "+cookie.data.highScore+"/50";
 					}
 				}
 				else
@@ -427,7 +441,7 @@
 					{
 						cookie.data.highScoreHard=score;
 						cookie.flush();
-						highScoreText.text="High Score: "+cookie.data.highScoreHard;
+						highScoreText.text="Best: "+cookie.data.highScoreHard+"/50";
 					}
 				}
 			}
@@ -678,41 +692,52 @@
 				moveRight=true;
 				
 			}
-			if ( _keysPressed[Keyboard.C]&&_keysPressed[Keyboard.R]&&_keysPressed[Keyboard.A]&&_keysPressed[Keyboard.B]) // SUPER SECRET CRAB MODE!!!!
+			if (event.keyCode == Keyboard.C ) // SUPER SECRET CRAB MODE!!!!
 			{
 				
-				anvilone.gotoAndStop(2);
-				anviltwo.gotoAndStop(2);
-				anvilthree.gotoAndStop(2);
+				if(!crabMode)
+				{
+					anvilone.gotoAndStop(2);
+					anviltwo.gotoAndStop(2);
+					anvilthree.gotoAndStop(2);
+					crabMode=true;
+				}
+				else
+				{
+					anvilone.gotoAndStop(1);
+					anviltwo.gotoAndStop(1);
+					anvilthree.gotoAndStop(1);
+					crabMode=false;
+				}
 			}
 			
 			if ( event.keyCode == Keyboard.P ) // Debug some more score.
 			{
 				if(score<25)
 				{
-						score=25;
+						//score=25;
 				}
 				else
 				{
 					if(score<50)
 					{
-						score=50;
+						//score=50;
 					}
 				}
 			}
 			
-			if ( event.keyCode == Keyboard.O ) // activate Debug mode!
+			if ( event.keyCode == Keyboard.O ) // activate Debug mode!(disabled for release)
 			{
 				
 				if(!debug) //if debug mode is off, turn it on.
 				{
-					debug=true;
-					anvilone.scoring=false;
+					//debug=true;
+					//anvilone.scoring=false;
 				}
 				else
 				{
-					debug=false;
-					anvilone.scoring=true;
+					//debug=false;
+					//anvilone.scoring=true;
 				}
 				
 			}

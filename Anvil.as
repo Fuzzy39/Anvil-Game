@@ -56,11 +56,18 @@
 		}
 		
 		
+		
 		function reroll()
 		{
 			this.y=-50;
-			this.x= ((Math.floor(Math.random() * 6))*50)+150;
-		
+			if(Math.floor(Math.random() * 8)==1)
+			{
+				this.x=Main.goldx;
+			}
+			else
+			{
+				this.x= ((Math.floor(Math.random() * 6))*50)+150;
+			}
 		}
 	}
 }
