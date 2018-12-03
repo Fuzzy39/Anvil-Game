@@ -12,9 +12,9 @@
 	public class Anvil extends flash.display.MovieClip
 	{
 		
-		
+		//Set Varibles
 		public var timer:Timer = new Timer(25);
-		var speedmult:int=0;
+		
 		var scoring:Boolean = false;
 		public var Active:Boolean = true;
 		
@@ -32,13 +32,13 @@
 		{
 			if(Active)
 			{
-				if(Main.mode==0)
+				if(Main.mode==0) //rules for normal
 				{
-					this.y=this.y+(2+(speedmult*0.18));
+					this.y=this.y+(2+(Main.score*0.18)); // multiplier is lower in normal mode.
 				}
-				else
+				else //hard mode rules
 				{
-					this.y=this.y+(2+(speedmult*0.25));
+					this.y=this.y+(2+(Main.score*0.23)); 
 				}
 			}
 			
@@ -48,7 +48,6 @@
 				{
 					Main.score++;
 				}
-				speedmult++;
 				reroll();
 				
 			}
